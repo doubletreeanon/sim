@@ -1,5 +1,3 @@
-import java.util.List;
-
 /*
  * Request.java
  * 
@@ -7,11 +5,13 @@ import java.util.List;
  *
  */
 
+import java.util.List;
+
 /**
  * Class Request provides different variables to communicate the type of request
  * to servers
  * 
- * @author ramprasad
+ * @author 
  * 
  */
 

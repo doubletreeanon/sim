@@ -7,13 +7,12 @@
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * class ServerStatic is used to simulate the server which handles the requests
  * from the clients
  * 
- * @author ramprasad
+ * @author
  * 
  */
 public class ServerStatic {
@@ -26,10 +25,10 @@ public class ServerStatic {
 	ArrayList<Request> sQ;
 	HashMap<String, Integer> popular;
 	HashMap<String, Integer> filePopular;
-	
+
 	HashMap<String, Integer> countUp;
 	HashMap<String, Integer> countLeft;
-	
+
 	public int cLevelLookup;
 	public int cPosLookup;
 	public int numOfReplicas;
@@ -37,25 +36,20 @@ public class ServerStatic {
 	public int parentLevel;
 
 	public static final int BUSY_THRESHOLD = 6;
-	
-	
+
 	public static final int upThreshold1 = 1;
 	public static final int upThreshold2 = 2;
-	
+
 	public static final int POPULAR_THRESHOLD = 4;
-	
+
 	public static final int leftThreshold = 1;
-	
+
 	private int tickCount = 0;
-	
-	public int counter1 = 0;
-	public int counter2= 0;
-	public int counter3 = 0;
-	
+
 	public static int pathLength = 0;
 	public static int maxPathLength = -1;
 	public static int total = 0;
-	
+
 	int D = 30, d = 2;
 
 	// constructor
@@ -119,21 +113,20 @@ public class ServerStatic {
 
 		// Read request
 		if (rq.type.equals("read")) {
-			
-			if(filePopular.containsKey(rq.fileName)) {
+
+			if (filePopular.containsKey(rq.fileName)) {
 				int num = filePopular.get(rq.fileName);
-				filePopular.put(rq.fileName, num+1);
+				filePopular.put(rq.fileName, num + 1);
 			} else {
 				filePopular.put(rq.fileName, 1);
 			}
-			
 
 			// if mode is "up"
 			if (rq.mode.equals("up")) {
 
-				if(countUp.containsKey(rq.fileName)) {
+				if (countUp.containsKey(rq.fileName)) {
 					int num = countUp.get(rq.fileName);
-					countUp.put(rq.fileName, num+1);
+					countUp.put(rq.fileName, num + 1);
 				} else {
 					countUp.put(rq.fileName, 1);
 				}
@@ -167,7 +160,7 @@ public class ServerStatic {
 						Node leftParent = util.selectLeftParent(this);
 						ServerStatic parent = getServerHash(rq.fileName,
 								leftParent.level, leftParent.pos);
-						
+
 						rq.sender = new Node(cLevelLookup, cPosLookup);
 						rq.receiver = new Node(leftParent.level, leftParent.pos);
 
@@ -191,12 +184,10 @@ public class ServerStatic {
 								leftParent.level, leftParent.pos);
 
 						parent.receiveRequest(req);
-
-						counter3 += 1;
+						
 						// service C
 						sQ.add(rq);
-						popular.put(rq.fileName,
-								popular.get(rq.fileName) + 1);
+						popular.put(rq.fileName, popular.get(rq.fileName) + 1);
 
 					}
 				} else {
@@ -204,17 +195,15 @@ public class ServerStatic {
 					// if countUp is less than popular threshold or it is a leaf
 					// node
 					// service the request
-					
+
 					// choose the left parent of the sender node and forward
 					// the request
-					
+
 					if (countUp.get(rq.fileName) <= POPULAR_THRESHOLD
 							|| util.isLeaf(this, rq.fileName, "lookup")) {
 
-						counter1 += 1;
 						sQ.add(rq);
-						popular.put(rq.fileName,
-								popular.get(rq.fileName) + 1);
+						popular.put(rq.fileName, popular.get(rq.fileName) + 1);
 
 					} else {
 
@@ -224,37 +213,36 @@ public class ServerStatic {
 						Node leftParent = util.selectLeftParent(sender);
 						ServerStatic parent = getServerHash(rq.fileName,
 								leftParent.level, leftParent.pos);
-						
-                        if(parent.getServerId() == this.getServerId()) {
-                        	
-                        	counter1 += 1;
-                        	sQ.add(rq);
-    						popular.put(rq.fileName,
-    								popular.get(rq.fileName) + 1);
-                        	
-                        } else {
 
-						
-						rq.receiver = new Node(leftParent.level, leftParent.pos);
-						
-						// mode is changed from "up" to "left"
-						rq.mode = "left";
+						if (parent.getServerId() == this.getServerId()) {
 
-						parent.receiveRequest(rq);
-						
-						int num = countUp.get(rq.fileName);
-						num = num -1;
-						countUp.put(rq.fileName, num);
-                        }
+							sQ.add(rq);
+							popular.put(rq.fileName,
+									popular.get(rq.fileName) + 1);
+
+						} else {
+
+							rq.receiver = new Node(leftParent.level,
+									leftParent.pos);
+
+							// mode is changed from "up" to "left"
+							rq.mode = "left";
+
+							parent.receiveRequest(rq);
+
+							int num = countUp.get(rq.fileName);
+							num = num - 1;
+							countUp.put(rq.fileName, num);
+						}
 					}
 				}
 			} else if (rq.mode.equals("left")) {
 
 				// if read request has mode as "left"
 
-				if(countLeft.containsKey(rq.fileName)) {
+				if (countLeft.containsKey(rq.fileName)) {
 					int num = countLeft.get(rq.fileName);
-					countLeft.put(rq.fileName, num+1);
+					countLeft.put(rq.fileName, num + 1);
 				} else {
 					countLeft.put(rq.fileName, 1);
 				}
@@ -269,7 +257,7 @@ public class ServerStatic {
 						Node leftParent = util.selectLeftParent(this);
 						ServerStatic parent = getServerHash(rq.fileName,
 								leftParent.level, leftParent.pos);
-						
+
 						rq.sender = new Node(cLevelLookup, cPosLookup);
 						rq.receiver = new Node(leftParent.level, leftParent.pos);
 
@@ -291,24 +279,18 @@ public class ServerStatic {
 								leftParent.level, leftParent.pos);
 
 						parent.receiveRequest(req);
-
-						counter3 += 1;
+						
 						// service request
 						sQ.add(rq);
-						
-						popular.put(rq.fileName,
-								popular.get(rq.fileName) + 1);
+
+						popular.put(rq.fileName, popular.get(rq.fileName) + 1);
 					}
 				} else {
 
-					if(countLeft.get(rq.fileName) > leftThreshold) {
-					counter2 += 1;
-					}
 					// service request
 					sQ.add(rq);
-					
-					popular.put(rq.fileName,
-							popular.get(rq.fileName) + 1);
+
+					popular.put(rq.fileName, popular.get(rq.fileName) + 1);
 				}
 
 			} else {
@@ -419,35 +401,36 @@ public class ServerStatic {
 	 */
 	public void serveRequest(int value) {
 
-	    tickCount++;
+		tickCount++;
 		while (value > 0) {
 			if (sQ.size() != 0) {
 				Request rq = sQ.remove(0);
 				total += 1;
 				pathLength += rq.length;
-				
-				if( maxPathLength < rq.length) {
+
+				if (maxPathLength < rq.length) {
 					maxPathLength = rq.length;
 				}
-				
+
 				totalRequestsServed += 1;
 			}
 			value--;
 		}
-		
-		
-		// logic to decrement the counter based on the popularity of file		
-		if(tickCount == 100) {
-			//System.out.println("Serving request");
+
+		// logic to decrement the counter based on the popularity of file
+		// resets the filepopular counter for the particular file to zero
+		// if it remains zero in the next cycle, counters are decremented 
+		// accordingly. once the counter becomes zero, file is removed from
+		// the node only if it is not a root node
+		if (tickCount == 100) {
 			boolean flag1 = false;
 			boolean flag2 = false;
-			for(String key: filePopular.keySet()) {
+			for (String key : filePopular.keySet()) {
 				int num = filePopular.get(key);
-				if( num == 0) {
-					if(countUp.containsKey(key)) {
+				if (num == 0) {
+					if (countUp.containsKey(key)) {
 						num = countUp.get(key);
-						if(num != 0) {
-							//System.out.println("Decrementing the counter");
+						if (num != 0) {
 							num -= 1;
 							countUp.put(key, num);
 						} else {
@@ -456,11 +439,10 @@ public class ServerStatic {
 					} else {
 						flag1 = true;
 					}
-					
-					if(countLeft.containsKey(key)) {
+
+					if (countLeft.containsKey(key)) {
 						num = countLeft.get(key);
-						if(num != 0) {
-							//System.out.println("Decrementing the counter");
+						if (num != 0) {
 							num -= 1;
 							countLeft.put(key, num);
 						} else {
@@ -469,46 +451,21 @@ public class ServerStatic {
 					} else {
 						flag2 = true;
 					}
-					
+
 				}
-				
-				if( flag1 == true && flag2 == true) {
-					if(files.contains(key) == true) {
+
+				if (flag1 == true && flag2 == true) {
+					if (files.contains(key) == true) {
 						ServerStatic parent = getServerHash(key, 0, 1);
-						if(this.getServerId() != parent.getServerId()) {
-							//System.out.println("Deleting file from the node");
-						files.remove(key);
+						if (this.getServerId() != parent.getServerId()) {
+							files.remove(key);
 						}
 					}
 				}
-				
+
 				filePopular.put(key, 0);
 			}
 			tickCount = 0;
-			//System.out.println("Successfully completed serving");
 		}
-		
-		/*
-		if(tickCount == 30) {
-			for(String key : countUp.keySet()) {
-				int num = countUp.get(key);
-				if(num != 0) {
-					num = num - 1;
-					countUp.put(key, num);
-				}
-			}
-			
-			for(String key : countLeft.keySet()) {
-				int num = countLeft.get(key);
-				if(num != 0) {
-					num = num - 1;
-					countLeft.put(key, num);
-				}
-			}
-			
-			tickCount = 0;
-		}*/
-		
-		//System.out.println("Exiting");
 	}
 }

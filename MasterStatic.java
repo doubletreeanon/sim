@@ -23,7 +23,7 @@ import java.util.Scanner;
  * MasterStatic class is defined for simulating the requests to the files stored
  * in the servers
  * 
- * @author ramprasad
+ * @author
  * 
  */
 
@@ -168,7 +168,7 @@ public class MasterStatic {
 		System.out
 				.println("\n*************************************************************");
 
-		// Iterating thorugh the servers
+		// Iterating through the servers
 		for (ServerStatic s : servers) {
 			System.out.println(s.getServerId() + " ------> " + s.sQ.size());
 		}
@@ -862,7 +862,7 @@ public class MasterStatic {
 	}
 
 	/**
-	 * storeFile function is used to calculate the target server ID and stroe
+	 * storeFile function is used to calculate the target server ID and store
 	 * the files
 	 * 
 	 * @param fileName
@@ -908,7 +908,7 @@ public class MasterStatic {
 	}
 
 	/**
-	 * stats function is used to collec the statistics from all the servers and
+	 * stats function is used to collect the statistics from all the servers and
 	 * to display the result.
 	 * 
 	 * @param sc
@@ -921,13 +921,6 @@ public class MasterStatic {
 		int count = 0;
 		int max = 0;
 		int zeroes = 0;
-		int c1;
-		int c2;
-		int c3;
-		c1 = 0;
-		c2 = 0;
-		c3 = 0;
-
 		// calculating the max Queue length
 		for (ServerStatic server : servers) {
 			sum += server.sQ.size();
@@ -935,9 +928,6 @@ public class MasterStatic {
 				count += 1;
 				if (server.sQ.size() > max) {
 					max = server.sQ.size();
-					c1 = server.counter1;
-					c2 = server.counter2;
-					c3 = server.counter3;
 				}
 			} else {
 				zeroes += 1;

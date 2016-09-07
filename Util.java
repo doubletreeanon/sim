@@ -13,7 +13,7 @@ import java.util.Random;
 /**
  * class Util provides the util functions used by servers and clients
  * 
- * @author ramprasad
+ * @author
  * 
  */
 public class Util {
@@ -36,8 +36,7 @@ public class Util {
 	 * @return hash value
 	 */
 	public int[] calcServerHash(String fileName, int level, int pos) {
-
-		//System.out.println("Filename : " + fileName + " level : " + level + " pos : " + pos);
+		
 		int degree = D;
 		int[] res = new int[2];
 		if (level == 0) {
@@ -220,7 +219,6 @@ public class Util {
 	public int selectMyChild(ServerStatic server) {
 		int size = MasterStatic.getNumberOfServer();
 		int degree = D;
-		int level = server.cLevelLookup;
 		int pos = server.cPosLookup;
 		int sum = 0;
 		for (int i = server.parentLevel; i >= 0; i--) {
@@ -268,7 +266,6 @@ public class Util {
 	public boolean isLeafRep(ServerStatic server) {
 		int size = MasterStatic.getNumberOfServer();
 		int degree = D;
-		int level = server.cLevelLookup;
 		int pos = server.cPosLookup;
 
 		// computing the number of child
@@ -339,6 +336,14 @@ public class Util {
 		}
 	}
 	
+	/**
+	 * selectLeftParent is used to choose the left parent which is parent of
+	 * node in the replication tree.
+	 * 
+	 * @param server Object of server
+	 * 
+	 * @return Object of node which has the position and level of node
+	 */
 	
 	public Node selectLeftParent(ServerStatic server) {
 		int temp = server.cPosLookup % D;
